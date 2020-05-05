@@ -92,7 +92,7 @@ Where, for instance, "appid" corresponds to the app-registration of the daemon a
 ## Granting Application Permissions to the deamon
 You need to add application permissions to the API app-registration. This is required to enable OAuth 2.0 client credentials flow. 
 
-Go to the API Proxy app registration you created previously, and edit its Manifest. You need to add an entry into the appRoles array specifying that the permission is for an application. For more info on this, feel free to have a look at https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-add-app-roles-in-azure-ad-apps
+Go to the API app registration you created previously, and edit its Manifest. You need to add an entry into the appRoles array specifying that the permission is for an application. For more info on this, feel free to have a look at https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-add-app-roles-in-azure-ad-apps
 
 The appRoles array should now look similar to the one below. 
 ````
@@ -132,20 +132,47 @@ Select the role you added previously, e.g. !Request" and click on "Add permissio
 
 Finally click on Click on Grant admin consent for <user name>. This step requires Azure AD admin privileges. If you don't have it this will not work.
 
+
+
+## Validate the Application Permissions in APIM
+In the previous section we granted role-based access for the client application to call the API. Now we can use a policy in APIM to validate the roles claim. 
+
+This makes sure that the token targets our API, and that the caller has the correct role-based access to the API.
+
+The validation policy should look similar to the below.
+
+````
+    <inbound>
+        <validate-jwt header-name="Authorization" failed-validation-httpcode="401" failed-validation-error-message="Unauthorized. Access token is missing or invalid.">
+            <openid-config url="https://login.microsoftonline.com/de270000-0000-0000-84d2-000000d640cb/.well-known/openid-configuration" />
+            <required-claims>
+                <claim name="aud" match="any">
+                    <value>api://80c40000-0000-4ef6-0000-0000d66eb2c9</value>
+                    <value>80c40000-0000-4ef6-0000-0000d66eb2c9</value>
+                </claim>
+                <claim name="roles" match="any">
+                    <value>API.Request</value>
+                </claim>
+            </required-claims>
+        </validate-jwt>
+        <return-response>
+            <set-status code="200" />
+            <set-header name="content-type" exists-action="override">
+                <value>application/json</value>
+            </set-header>
+            <set-body>{
+                "status": "200",
+                "message": "OK"
+            }</set-body>
+        </return-response>
+    </inbound>
+````
+
 ## Create the Daemon
-The Daemon app will be a simple Python-thingy that authenticates towards Azure AD using the client credentials flow (https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-client-creds-grant-flow)
 
-You have already created an App Registration for the Daemon, to give it an identity in Azure AD. Feel free to have a look at this page: https://docs.microsoft.com/en-us/azure/active-directory/develop/scenario-daemon-app-registration for some more details about this though. 
-
+TBD. Postman will have to do for now... 
 
 
 
-
-
-Next, use the left hand navigation pane to go to **API Permissions**, then select "Add a permission"
-
-<p align="left">
-  <img width="20%"  src="./media/permission.png">
-</p>
 
 
