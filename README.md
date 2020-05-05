@@ -71,9 +71,15 @@ Also, make a note of the clientID, which can be found in the "Overview" from the
 
 Use e.g. postman to try if you get a response from your token endpoint. 
 
-The URL to use is  https://login.microsoftonline.com/<tenant id>/oauth2/v2.0/token, and the method needs to be POST. 
+The URL to use is  https://login.microsoftonline.com/\<tenant id\>/oauth2/v2.0/token, and the method needs to be POST. 
 
-You also need to add a few key value pairs in the body of the request (not query parameters). See below:
+You also need to add a few key value pairs in the body of the request (not query parameters).
+client_id: The ClientID you saved above (similar to ````7f038808-5322-4125-8143-12d804a45c1b````)
+
+* grant_type: should be ````client_credentials````
+* scope: The application ID URI from above (similar to ````api://7f038808-5322-4125-8143-12d804a45c1b````)
+* client_secret: The secret you save securely before (right?)
+* client_id: The ClientID you saved above (similar to ````7f038808-5322-4125-8143-12d804a45c1b````)
 
 <p align="left">
   <img width="100%"  src="./media/postman.png">
