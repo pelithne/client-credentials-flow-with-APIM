@@ -69,10 +69,14 @@ Copy the secret and store it safely. You will not be able to see it again in the
 
 Also, make a note of the clientID, which can be found in the "Overview" from the left hand navigation pane.
 
-Use e.g. postman to try if you get a response from your token endpoint
+Use e.g. postman to try if you get a response from your token endpoint. 
+
+The URL to use is  https://login.microsoftonline.com/<tenant id>/oauth2/v2.0/token, and the method needs to be POST. 
+
+You also need to add a few key value pairs in the body of the request (not query parameters). See below:
 
 <p align="left">
-  <img width="80%"  src="./media/postman.png">
+  <img width="100%"  src="./media/postman.png">
 </p>
 
 You should get a response similar to the (slightly redacted) output in the picture above.
@@ -80,28 +84,58 @@ You should get a response similar to the (slightly redacted) output in the pictu
 
 
 
+## Granting Application Permissions to the deamon
+You need to add application permissions to the API app-registration. This is required to enable OAuth 2.0 client credentials flow. 
 
+Go to the API Proxy app registration you created previously, and edit its Manifest. You need to add an entry into the appRoles array specifying that the permission is for an application. For more info on this, feel free to have a look at https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-add-app-roles-in-azure-ad-apps
 
+The appRoles array should now look similar to the one below. 
+````
+      "appRoles": [
+            {
+                  "allowedMemberTypes": [
+                        "Application"
+                  ],
+                  "description": "Allow client apps to send requests to the API.",
+                  "displayName": "API Request",
+                  "id": "cfef0000-0000-0000-be10-90e97fa573a6",
+                  "isEnabled": true,
+                  "lang": null,
+                  "origin": "Application",
+                  "value": "API.Request"
+            }
+      ]
+````
 
+The only thing you need to change is the GUID (id) value, and it needs to be a valid GUID (for guidance, look here https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/new-guid?view=powershell-7 or search the web for a guid generator).
 
+When you are done, click save.
+
+Now, go to the app-registration of your daemon and select "API Permissions" in the left hand toolbar.
+
+Click on Add a Permission, and find your API and select it.
+
+<p align="left">
+  <img width="100%"  src="./media/api-permissions.png">
+</p>
+
+Select the role you added previously, e.g. !Request" and click on "Add permissions".
+
+<p align="left">
+  <img width="100%"  src="./media/api-permissions2.png">
+</p>
+
+Finally click on Click on Grant admin consent for <user name>. This step requires Azure AD admin privileges. If you don't have it this will not work.
 
 ## Create the Daemon
 The Daemon app will be a simple Python-thingy that authenticates towards Azure AD using the client credentials flow (https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-client-creds-grant-flow)
 
-In order for the Daemon to get an identity, you need to register it in Azure AD. For background information about this, feel free to have a look at this page: https://docs.microsoft.com/en-us/azure/active-directory/develop/scenario-daemon-app-registration
-
-First, search for "App Registrations" in the search bar, and select "App Registrations". The click in the plus-sign to the left to add a new Registration
-
-<p align="left">
-  <img width="50%"  src="./media/new-registration.png">
-</p>
+You have already created an App Registration for the Daemon, to give it an identity in Azure AD. Feel free to have a look at this page: https://docs.microsoft.com/en-us/azure/active-directory/develop/scenario-daemon-app-registration for some more details about this though. 
 
 
-Give the app a name (I called it daemon-app), select the single tenant account type and click on the "Register" button (There is no need for a Redict URI, since we will only be using the the client credentials flow which does not involve any call-back).
 
-<p align="left">
-  <img width="60%"  src="./media/new-registration2.png">
-</p>
+
+
 
 Next, use the left hand navigation pane to go to **API Permissions**, then select "Add a permission"
 
