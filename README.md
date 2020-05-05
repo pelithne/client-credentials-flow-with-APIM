@@ -30,7 +30,7 @@ Then click review and create. Validation should pass, after which you can click 
 
 ## Create an API with APIM
 
-Azure API Manager, is a platform that can host API definitions. The actual APIs are not hosted in APIM, instead it points to backend APIs, which could be running on Azure, on-prem, in another cloud or anywhere else you have connectivity to.
+Azure API Manager, is a platform that can hold API definitions. The APIs are not hosted in APIM, instead it points to backend APIs, which could be running on Azure, on-prem, in another cloud or anywhere else you have connectivity to.
 
 Start by going to your resource group, if you are not already there. Click on "Create Resources" (or "Add") and search for APIM in the search field. Select API Management from the search results, then click create.
 
@@ -47,6 +47,43 @@ Add an "Organization name" of your choice and an "Administrator email".
 </p>
 
 Now wait. It can take a while to create the APIM instance, up to 40 minutes at the time of writing (May 2020)
+
+## Create Application Registrations
+
+Both the API and the Daemon needs to be registered in Azure AD, so that we can use Oauth2 for authentication. We start with the API.
+
+Search for "App registrations" and select App Registrations from the search results. Name the registration appropriately and leave the defaults and click "Register".
+
+<p align="left">
+  <img width="50%"  src="./media/api-app-registration.png">
+</p>
+
+
+In the left hand navigation pane, go to "Expose an API", then click on "Application ID URI - Set", and leave the default value, which should look similar to api://7f038808-5322-4125-8143-12d804a45c1b. The alphanumeric string is the clientID. **Make a note of this** as it will be needed later. (7f038808-5322-4125-8143-37d806a45c1b)
+
+Now, create another app registration for the daemon. Give it a name, and leave the defaults then click "Register".
+
+Now, we need to create a secret for the daemon. In the left hand navigation pane, go to "Certificate & Secrets", then select "New Client Secret". Give it a name and choose an expiration time (I use 1 year).
+
+Copy the secret and store it safely. You will not be able to see it again in the portal.    
+
+Also, make a note of the clientID, which can be found in the "Overview" from the left hand navigation pane.
+
+8ecc3af1-6ede-41d8-ab27-18c38b2d5370
+
+Use e.g. postman to try if you get a response from your token endpoint
+
+<p align="left">
+  <img width="50%"  src="./media/postman.png">
+</p>
+
+You should get a response similar to the (slightly redacted) output in the picture above.
+
+
+
+
+
+
 
 
 
