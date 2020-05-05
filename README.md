@@ -7,11 +7,11 @@ Automatic Daemon (With Azure Identity) -> APIM -> Backend REST API -> Operation 
                                                                    -> Operation 2
                                                                    -> Operation n
 
-Depending on the identity of the Daemon, the APIM will allow access to different parts of the backend API (different operations)
+Depending on the identity (or AD group) of the Daemon, the APIM will allow access to different parts of the backend API (different operations)
 
 ## Create a Resource Group
 
-Start by log in in to the Azure portal, and make sure you are in your "Home", https://portal.azure.com/#home
+Start by logging in in to the Azure portal, and make sure you are in your "Home", https://portal.azure.com/#home
 
 Click on "Create a Resource"
 
@@ -19,7 +19,7 @@ Click on "Create a Resource"
   <img width="40%"  src="./media/create-a-resource.png">
 </p>
 
-In the search field, search for "Resource Group" and select Resource Group from the search results. Then click the "Create" button to start the creation of the Resource Group (RG). Give the RG a nice name, and make sure its placed in a Region close to you.
+In the search field, search for "Resource Group" and select Resource Group from the search results. Then click the "Create" button to start the creation of the Resource Group (RG). Give the RG a nice name, and make sure its placed in a Region close to you (actually the RG is just a placeholder, so the region doesn't really matter, but when you place resources in the RG they will be defaulted to the same region which makes things convenient).
 
 <p align="left">
   <img width="60%"  src="./media/create-a-resource-group.png">
@@ -28,7 +28,7 @@ In the search field, search for "Resource Group" and select Resource Group from 
 Then click review and create. Validation should pass, after which you can click on create.
 
 
-## Create an API with APIM
+## Create an API Manager instance
 
 Azure API Manager, is a platform that can hold API definitions. The APIs are not hosted in APIM, instead it points to backend APIs, which could be running on Azure, on-prem, in another cloud or anywhere else you have connectivity to.
 
@@ -47,6 +47,34 @@ Add an "Organization name" of your choice and an "Administrator email".
 </p>
 
 Now wait. It can take a while to create the APIM instance, up to 40 minutes at the time of writing (May 2020)
+
+## Create an API in APIM
+
+This section has borrowed a lot from this tutorial: https://docs.microsoft.com/en-us/azure/api-management/import-and-publish#-import-and-publish-a-backend-api but I have made it a bit condensed. If unclear, feel free to go to the source for more details.
+
+You will import an OpenAPI (formerly Swagger) Specification backend API in JSON format into APIM. The backend API is hosted at https://conferenceapi.azurewebsites.net?format=json.
+
+Start by going to you APIM instance. In the left navigation of your API Management instance, select APIs from the API Management section.
+
+Select the OpenAPI tile, and then select "Full" on the top left of the pop up screen (instead of basic, which is the default start screen).
+
+Paste this URI into the "Open API Specification" field: https://conferenceapi.azurewebsites.net?format=json
+
+This will import the API into APIM, and populate the other fields in the pop-up. You need to add an API URL suffix that will be used to reach the API that is published through APIM. You can call it anything, but I will call it "conference".
+
+It should look like the following: 
+
+<p align="left">
+  <img width="50%"  src="./media/create-api.png">
+</p>
+
+If all looks right, click "Create".
+
+The new API will be imported, and you will see that API with all its operations, next to the Echo API which comes as a default with APIM. 
+
+<p align="left">
+  <img width="80%"  src="./media/apis.png">
+</p>
 
 ## Create Application Registrations
 
@@ -74,7 +102,6 @@ Use e.g. postman to try if you get a response from your token endpoint.
 The URL to use is  https://login.microsoftonline.com/\<tenant id\>/oauth2/v2.0/token, and the method needs to be POST. 
 
 You also need to add a few key value pairs in the body of the request (not query parameters).
-client_id: The ClientID you saved above (similar to ````7f038808-5322-4125-8143-12d804a45c1b````)
 
 * grant_type: should be ````client_credentials````
 * scope: The application ID URI from above (similar to ````api://7f038808-5322-4125-8143-12d804a45c1b````)
@@ -87,7 +114,7 @@ client_id: The ClientID you saved above (similar to ````7f038808-5322-4125-8143-
 
 You should get a response similar to the (slightly redacted) output in the picture above.
 
-If  you go to (for instance jwt.ms) you can decode the token and break it down to its parts. I should look something like this (except for the redacted parts):
+If  you go to (for instance) jwt.ms you can decode the token and break it down to its parts. I should look something like this (except for the redacted parts):
 
 <p align="left">
   <img width="60%"  src="./media/jwt-decoded.png">
@@ -136,7 +163,7 @@ Select the role you added previously, e.g. !Request" and click on "Add permissio
   <img width="100%"  src="./media/api-permissions2.png">
 </p>
 
-Finally click on Click on Grant admin consent for <user name>. This step requires Azure AD admin privileges. If you don't have it this will not work.
+Finally, when prompted, click on Click on Grant admin consent for \<your user name\>. This step requires Azure AD admin privileges. If you don't have it this will not work.
 
 
 
@@ -174,11 +201,26 @@ The validation policy should look similar to the below.
     </inbound>
 ````
 
+## Try it out
+
+Use postman (or similar) to try out the AD enforced API access, and the jwt validation.
+
+We will use the default echo API, so the URL to use will be
+
+````
+https://\<your APIM\>.azure-api.net/echo
+````
+
+
+
 ## Create the Daemon
 
 TBD. Postman will have to do for now... 
 
+##
 
 
 
+
+## Create Azure Function backend API
 
