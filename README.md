@@ -3,11 +3,11 @@ This step-by-step describes how to setup a daemon app that sends requests via AP
 
 The "architecture" for this tutorial case is something like the following
 
-Automatic Daemon (With Azure Identity) -> APIM -> Backend REST API -> Operation 1
-                                                                   -> Operation 2
-                                                                   -> Operation n
+* Automatic Daemon 1 -> APIM -> Backend REST API -> Operation 1, Operation 2
+* Automatic Daemon 2 -> APIM -> Backend REST API -> Operation 2
+* Automatic Daemon x -> APIM -> Backend REST API -> Operation y
 
-Depending on the identity (or AD group) of the Daemon, the APIM will allow access to different parts of the backend API (different operations)
+Depending on the identity (or AD group) of the Daemon, the APIM will allow access to different parts of the backend API (different operations, in this case).
 
 ## Create a Resource Group
 
@@ -65,7 +65,7 @@ This will import the API into APIM, and populate the other fields in the pop-up.
 It should look like the following: 
 
 <p align="left">
-  <img width="50%"  src="./media/create-api.png">
+  <img width="80%"  src="./media/create-api.png">
 </p>
 
 If all looks right, click "Create".
@@ -73,8 +73,10 @@ If all looks right, click "Create".
 The new API will be imported, and you will see that API with all its operations, next to the Echo API which comes as a default with APIM. 
 
 <p align="left">
-  <img width="80%"  src="./media/apis.png">
+  <img width="100%"  src="./media/apis.png">
 </p>
+
+You will work more with the API operations later (adding policies etc).
 
 ## Create Application Registrations
 
