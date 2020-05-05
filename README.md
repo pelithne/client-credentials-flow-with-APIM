@@ -1,5 +1,5 @@
 # daemon-to-apim-to-backend
-THis Stephby-step describes how to setup a daemon app that sends requests via APIM to a REST API backend. 
+This step-by-step describes how to setup a daemon app that sends requests via APIM to a REST API backend. 
 
 The "architecture" for this tutorial case is something like the following
 
@@ -22,7 +22,7 @@ Click on "Create a Resource"
 In the search field, search for "Resource Group" and select Resource Group from the search results. Then click the "Create" button to start the creation of the Resource Group (RG). Give the RG a nice name, and make sure its placed in a Region close to you.
 
 <p align="left">
-  <img width="40%"  src="./media/create-a-resource-group.png">
+  <img width="60%"  src="./media/create-a-resource-group.png">
 </p>
 
 Then click review and create. Validation should pass, after which you can click on create.
@@ -43,7 +43,7 @@ Add an "Organization name" of your choice and an "Administrator email".
 **Make sure** to use the "Developer" pricing tier. The developer tier gives you full functionality but without a Service Level Agreement, and is much cheaper than the other alternatives.
 
 <p align="left">
-  <img width="40%"  src="./media/create-apim.png">
+  <img width="50%"  src="./media/create-apim.png">
 </p>
 
 Now wait. It can take a while to create the APIM instance, up to 40 minutes at the time of writing (May 2020)
@@ -58,20 +58,20 @@ In order for the Daemon to get an identity, you need to register it in Azure AD.
 First, search for "App Registrations" in the search bar, and select "App Registrations". The click in the plus-sign to the left to add a new Registration
 
 <p align="left">
-  <img width="40%"  src="./media/new-registration.png">
+  <img width="50%"  src="./media/new-registration.png">
 </p>
 
 
 Give the app a name (I called it daemon-app), select the single tenant account type and click on the "Register" button (There is no need for a Redict URI, since we will only be using the the client credentials flow which does not involve any call-back).
 
 <p align="left">
-  <img width="40%"  src="./media/new-registration2.png">
+  <img width="60%"  src="./media/new-registration2.png">
 </p>
 
 Next, use the left hand navigation pane to go to **API Permissions**, then select "Add a permission"
 
 <p align="left">
-  <img width="40%"  src="./media/permission.png">
+  <img width="20%"  src="./media/permission.png">
 </p>
 
 
