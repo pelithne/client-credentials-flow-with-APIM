@@ -59,7 +59,7 @@ Search for "App registrations" and select App Registrations from the search resu
 </p>
 
 
-In the left hand navigation pane, go to "Expose an API", then click on "Application ID URI - Set", and leave the default value, which should look similar to api://7f038808-5322-4125-8143-12d804a45c1b. The alphanumeric string is the clientID. **Make a note of this** as it will be needed later. (7f038808-5322-4125-8143-37d806a45c1b)
+In the left hand navigation pane, go to "Expose an API", then click on "Application ID URI - Set", and leave the default value, which should look similar to ````api://7f038808-5322-4125-8143-12d804a45c1b````. The alphanumeric string is the clientID. **Make a note of this** as it will be needed later.
 
 Now, create another app registration for the daemon. Give it a name, and leave the defaults then click "Register".
 
@@ -69,12 +69,10 @@ Copy the secret and store it safely. You will not be able to see it again in the
 
 Also, make a note of the clientID, which can be found in the "Overview" from the left hand navigation pane.
 
-8ecc3af1-6ede-41d8-ab27-18c38b2d5370
-
 Use e.g. postman to try if you get a response from your token endpoint
 
 <p align="left">
-  <img width="50%"  src="./media/postman.png">
+  <img width="80%"  src="./media/postman.png">
 </p>
 
 You should get a response similar to the (slightly redacted) output in the picture above.
