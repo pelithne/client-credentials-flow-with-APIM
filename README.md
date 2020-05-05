@@ -84,7 +84,7 @@ You should get a response similar to the (slightly redacted) output in the pictu
 If  you go to (for instance jwt.ms) you can decode the token and break it down to its parts. I should look something like this (except for the redacted parts):
 
 <p align="left">
-  <img width="40%"  src="./media/jwt-decoded.png">
+  <img width="60%"  src="./media/jwt-decoded.png">
 </p>
 
 Where, for instance, "appid" corresponds to the app-registration of the daemon app.
