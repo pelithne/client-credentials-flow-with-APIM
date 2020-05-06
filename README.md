@@ -1,5 +1,7 @@
-# daemon-to-apim-to-backend
-This step-by-step describes how to setup a daemon app that sends requests via APIM to a REST API backend. 
+# Client Credentials flow with APIM
+This step-by-step guide describes how to setup a daemon app that sends requests via APIM to a REST API backend. 
+
+Authentication of the Daemons is controlled by Oauth Client Credentials flow, using Azure Active Directory and policies in Azure API Management.
 
 The "architecture" for this tutorial case is something like the following
 
@@ -7,7 +9,7 @@ The "architecture" for this tutorial case is something like the following
 * Automatic Daemon 2 -> APIM -> Backend REST API -> Operation 2
 * Automatic Daemon x -> APIM -> Backend REST API -> Operation y
 
-Depending on the identity (or AD group) of the Daemon, the APIM will allow access to different parts of the backend API (different operations, in this case).
+Depending on the identity (or AD group) of the Daemon, the APIM will allow access to different parts of the backend API.
 
 ## Create a Resource Group
 
