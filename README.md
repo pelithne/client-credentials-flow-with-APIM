@@ -243,13 +243,13 @@ To enable more centralized control over access to backend APIs, AD groups can be
 From the left hand navigation bar, select "Groups" 
 
 <p align="left">
-  <img width="100%"  src="./media/ad-groups.png">
+  <img width="30%"  src="./media/ad-groups.png">
 </p>
 
 Then create a new group and give it a name, and click "no members selected" to add new members to the group
 
 <p align="left">
-  <img width="100%"  src="./media/new-group.png">
+  <img width="40%"  src="./media/new-group.png">
 </p>
 
 Add one of your Daemon app registrations to the group and click select. Then click Create.
@@ -259,10 +259,12 @@ We will use the group id, to create another claim in the API policy, so save it 
 Go to your APIM instance, and navigate to APIs and then the imported "Demo Conference API". Once again, click "All operations".
 
 Edit the policy by clicking "validate-jwt" in the inbound processing box, then add the new claim by adding the following, but using the group id of the group you just created. You should place it at the same level as the other claims, between \<required-claims\> and \<\/required-claims\>
- 
+
+````
 <claim name="groups" match="any">
-    <value>\<Group ID\></value>
+    <value><Group ID></value>
 </claim>
+````
 
 Now try to access the API with the Daemon which you included in the group. The result should be as before.
 
