@@ -76,7 +76,7 @@ The new API will be imported, and you will see that API with all its operations,
   <img width="100%"  src="./media/apis.png">
 </p>
 
-For simplicity, go into the settings of the API and uncheck the box named "Subscription needed". This is to remove the need to send in a subscription key with every request (we will implement authentication/authorization in a different way).
+For simplicity, go into the settings of the API and uncheck the box named "Subscription required". This is to remove the need to send in a subscription key with every request (we will implement authentication/authorization in a different way).
 
 <p align="left">
   <img width="40%"  src="./media/sub.png">
@@ -84,7 +84,7 @@ For simplicity, go into the settings of the API and uncheck the box named "Subsc
 
 To try the new API out, you can send a request to ````https://\<your APIM\>.azure-api.net/conference/speakers````. This is one of the operations of the API, named GetSpeakers.
 
-You can use a browser for this, or curl or postman or what is your preference. The response should be a list of people, "speakers".
+You can use a browser for this, or curl or postman or whatever is your preference. The response should be a list of people, "speakers".
 
 You will work more with the API operations later (adding policies etc).
 
@@ -144,7 +144,7 @@ Go to the API app registration you created previously, and edit its Manifest. Yo
 
 The appRoles array is empty to begin with and you need to add the following:
 
-`````
+````
       "appRoles": [
             {
                   "allowedMemberTypes": [
@@ -236,5 +236,34 @@ https://\<your APIM\>.azure-api.net/conference/speakers
 ````
 In order for this all to work, you also need to add the Access token as a header in the request.
 
+## Validate AD group membership
 
+To enable more centralized control over access to backend APIs, AD groups can be used. In order to demonstrate this a new group will be created in your AD. Search for "AD" and select "Azure Active Directory" from the search results.
 
+From the left hand navigation bar, select "Groups" 
+
+<p align="left">
+  <img width="100%"  src="./media/ad-groups.png">
+</p>
+
+Then create a new group and give it a name, and click "no members selected" to add new members to the group
+
+<p align="left">
+  <img width="100%"  src="./media/new-group.png">
+</p>
+
+Add one of your Daemon app registrations to the group and click select. Then click Create.
+
+We will use the group id, to create another claim in the API policy, so save it (on make sure you know how to navigate back to it).
+
+Go to your APIM instance, and navigate to APIs and then the imported "Demo Conference API". Once again, click "All operations".
+
+Edit the policy by clicking "validate-jwt" in the inbound processing box, then add the new claim by adding the following, but using the group id of the group you just created. You should place it at the same level as the other claims, between \<required-claims\> and \<\/required-claims\>
+ 
+<claim name="groups" match="any">
+    <value>\<Group ID\></value>
+</claim>
+
+Now try to access the API with the Daemon which you included in the group. The result should be as before.
+
+If instead you try to access the API with the other Daemon, the request will be rejected.
