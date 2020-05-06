@@ -76,6 +76,13 @@ The new API will be imported, and you will see that API with all its operations,
   <img width="100%"  src="./media/apis.png">
 </p>
 
+
+For simplicity, go into the settings of the API and uncheck the box named "Subscription needed". 
+
+To try the new API out, you can send a request to ````https://\<your APIM\>.azure-api.net/conference/speakers````. This is one of the operations of the API, named GetSpeakers.
+
+You can use a browser for this, or curl or postman or what is your preference. The response should be a list of people, "speakers".
+
 You will work more with the API operations later (adding policies etc).
 
 ## Create Application Registrations
