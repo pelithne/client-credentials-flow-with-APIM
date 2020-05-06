@@ -273,3 +273,7 @@ Edit the policy by clicking "validate-jwt" in the inbound processing box, then a
 Now try to access the API with the Daemon which you included in the group. The result should be as before.
 
 If instead you try to access the API with the other Daemon, the request will be rejected.
+
+## Extra assignment!
+
+Use the tools and processes above to restrict usage on Operation level instead of API level. For example, give Daemon-1 access to GetSessions and GetSpeakers, while Daemon-2 only gets access to GetSpeakers.
