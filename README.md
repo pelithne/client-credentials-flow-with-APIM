@@ -79,7 +79,7 @@ The new API will be imported, and you will see that API with all its operations,
 For simplicity, go into the settings of the API and uncheck the box named "Subscription needed". This is to remove the need to send in a subscription key with every request (we will implement authentication/authorization in a different way).
 
 <p align="left">
-  <img width="100%"  src="./media/sub.png">
+  <img width="40%"  src="./media/sub.png">
 </p>
 
 To try the new API out, you can send a request to ````https://\<your APIM\>.azure-api.net/conference/speakers````. This is one of the operations of the API, named GetSpeakers.
