@@ -22,7 +22,7 @@ Click on "Create a Resource"
 In the search field, search for "Resource Group" and select Resource Group from the search results. Then click the "Create" button to start the creation of the Resource Group (RG). Give the RG a nice name, and make sure its placed in a Region close to you (actually the RG is just a placeholder, so the region doesn't really matter, but when you place resources in the RG they will be defaulted to the same region which makes things convenient).
 
 <p align="left">
-  <img width="60%"  src="./media/create-a-resource-group.png">
+  <img width="70%"  src="./media/create-a-resource-group.png">
 </p>
 
 Then click review and create. Validation should pass, after which you can click on create.
@@ -34,11 +34,11 @@ Azure API Manager, is a platform that can hold API definitions. The APIs are not
 
 Start by going to your resource group, if you are not already there. Click on "Create Resources" (or "Add") and search for APIM in the search field. Select API Management from the search results, then click create.
 
-Give your APIM a globally unique name. This is needed because the name will be used to create a URL that needs to be a Fully Qualified Domain Name, FQDN. 
+Give your APIM a globally unique name. This is needed because the name will be used to create a URL that needs to be a Fully Qualified Domain Name, FQDN.
 
-Make sure that the APIM is located in the right subscription and in the resource group you just created. 
+Make sure that the APIM is located in the right subscription and in the resource group you just created.
 
-Add an "Organization name" of your choice and an "Administrator email". 
+Add an "Organization name" of your choice and an "Administrator email".
 
 **Make sure** to use the "Developer" pricing tier. The developer tier gives you full functionality but without a Service Level Agreement, and is much cheaper than the other alternatives.
 
@@ -88,14 +88,13 @@ Search for "App registrations" and select App Registrations from the search resu
   <img width="50%"  src="./media/api-app-registration.png">
 </p>
 
-
 In the left hand navigation pane, go to "Expose an API", then click on "Application ID URI - Set", and leave the default value, which should look similar to ````api://7f038808-5322-4125-8143-12d804a45c1b````. The alphanumeric string is the clientID. **Make a note of this** as it will be needed later.
 
 Now, create another app registration for the daemon. Give it a name, and leave the defaults then click "Register".
 
 Now, we need to create a secret for the daemon. In the left hand navigation pane, go to "Certificate & Secrets", then select "New Client Secret". Give it a name and choose an expiration time (I use 1 year).
 
-Copy the secret and store it safely. You will not be able to see it again in the portal.    
+Copy the secret and store it safely. You will not be able to see it again in the portal.
 
 Also, make a note of the clientID, which can be found in the "Overview" from the left hand navigation pane.
 
@@ -124,13 +123,18 @@ If  you go to (for instance) jwt.ms you can decode the token and break it down t
 
 Where, for instance, "appid" corresponds to the app-registration of the daemon app.
 
-## Granting Application Permissions to the deamon
-You need to add application permissions to the API app-registration. This is required to enable OAuth 2.0 client credentials flow. 
+## Create second Daemon
+
+Repeat the steps from the previous section, and give the second daemon a nice descriptive (and inventive!) name, like daemon-2. **Remember to save the secret**
+
+## Granting Application Permissions to the deamons
+You need to add application permissions to the API app-registration. This is required to enable OAuth 2.0 client credentials flow.
 
 Go to the API app registration you created previously, and edit its Manifest. You need to add an entry into the appRoles array specifying that the permission is for an application. For more info on this, feel free to have a look at https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-add-app-roles-in-azure-ad-apps
 
-The appRoles array should now look similar to the one below. 
-````
+The appRoles array is empty to begin with and you need to add the following:
+
+`````
       "appRoles": [
             {
                   "allowedMemberTypes": [
@@ -153,13 +157,13 @@ When you are done, click save.
 
 Now, go to the app-registration of your daemon and select "API Permissions" in the left hand toolbar.
 
-Click on Add a Permission, and find your API and select it.
+Click on Add a Permission, find your API and select it.
 
 <p align="left">
   <img width="100%"  src="./media/api-permissions.png">
 </p>
 
-Select the role you added previously, e.g. !Request" and click on "Add permissions".
+Select the role you added previously, e.g. "Request" and click on "Add permissions".
 
 <p align="left">
   <img width="100%"  src="./media/api-permissions2.png">
@@ -167,62 +171,60 @@ Select the role you added previously, e.g. !Request" and click on "Add permissio
 
 Finally, when prompted, click on Click on Grant admin consent for \<your user name\>. This step requires Azure AD admin privileges. If you don't have it this will not work.
 
-
+Repeat the API-permission steps for the second app-registration (daemon-2) as well.
 
 ## Validate the Application Permissions in APIM
-In the previous section we granted role-based access for the client application to call the API. Now we can use a policy in APIM to validate the roles claim. 
+In the previous section we granted role-based access for the client application to call the API. Now we can use a policy in APIM to validate the roles claim.
 
-This makes sure that the token targets our API, and that the caller has the correct role-based access to the API.
+Go to the the API we imported before (conference API), and click on "all operations". Then select "Edit policy" by clicking on the tiny **\<\/\>** "logo" to the far right. 
 
-The validation policy should look similar to the below.
+Replace the entire inbound clause with the policy below, after changing the following values:
+
+ * openid-config url: Replace the GUID with your Tenant ID
+ * claim name="aud": Replace the value with your API app registration id
+ * claim name="appid": Replace the value with your Daemon apps registration ids
 
 ````
     <inbound>
         <validate-jwt header-name="Authorization" failed-validation-httpcode="401" failed-validation-error-message="Unauthorized. Access token is missing or invalid.">
-            <openid-config url="https://login.microsoftonline.com/de270000-0000-0000-84d2-000000d640cb/.well-known/openid-configuration" />
+            <openid-config url="https://login.microsoftonline.com/3a10cb8b-866e-1231-b7fd-4a7ca62328c9/.well-known/openid-configuration" />
             <required-claims>
                 <claim name="aud" match="any">
-                    <value>api://80c40000-0000-4ef6-0000-0000d66eb2c9</value>
-                    <value>80c40000-0000-4ef6-0000-0000d66eb2c9</value>
+                    <value>api://7f038808-5322-4125-8143-123806a45123</value>
+                </claim>
+                <claim name="appid" match="any">
+                    <value>8ecc3af1-6ede-41d8-ab27-12338b2d5123</value>
                 </claim>
                 <claim name="roles" match="any">
                     <value>API.Request</value>
                 </claim>
             </required-claims>
         </validate-jwt>
-        <return-response>
-            <set-status code="200" />
-            <set-header name="content-type" exists-action="override">
-                <value>application/json</value>
-            </set-header>
-            <set-body>{
-                "status": "200",
-                "message": "OK"
-            }</set-body>
-        </return-response>
     </inbound>
 ````
 
+What this policy will do, is to 
+
+* Evaluate that the "Audience" is correct. In other words, we make sure that the token targets our API.
+* Evaluate that the appid is correct. In other words, we make sure that the user is allowed to use the API
+* Evaluate that the role "API.Request" had the correct RBAC permissions to use the API.
+
 ## Try it out
 
-Use postman (or similar) to try out the AD enforced API access, and the jwt validation.
+You have already used postman (or similar, like Insomnia) to get the Access Token
 
-We will use the default echo API, so the URL to use will be
+<p align="left">
+  <img width="100%"  src="./media/postman.png">
+</p>
+
+Now, send a request to an operation in the newly created API. In the example below the request is sent to the "GetSpeakers" operation, but you can use any of the operations since the policy is written on the API-level Rather than on operation level.
+
+The URL to use will look similar to this:
 
 ````
-https://\<your APIM\>.azure-api.net/echo
+https://\<your APIM\>.azure-api.net/conference/speakers
 ````
+In order for this all to work, you also need to add the Access token as a header in the request.
 
 
-
-## Create the Daemon
-
-TBD. Postman will have to do for now... 
-
-##
-
-
-
-
-## Create Azure Function backend API
 
