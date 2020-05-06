@@ -108,6 +108,8 @@ Copy the secret and store it safely. You will not be able to see it again in the
 
 Also, make a note of the clientID, which can be found in the "Overview" from the left hand navigation pane.
 
+## Get the Access Token
+
 Use e.g. postman to try if you get a response from your token endpoint. 
 
 The URL to use is  https://login.microsoftonline.com/\<tenant id\>/oauth2/v2.0/token, and the method needs to be POST. 
@@ -125,7 +127,7 @@ You also need to add a few key value pairs in the body of the request (not query
 
 You should get a response similar to the (slightly redacted) output in the picture above.
 
-If  you go to (for instance) jwt.ms you can decode the token and break it down to its parts. I should look something like this (except for the redacted parts):
+If you go to (for instance) jwt.ms you can decode the token and break it down to its parts. I should look something like this (except for the redacted parts):
 
 <p align="left">
   <img width="60%"  src="./media/jwt-decoded.png">
@@ -136,6 +138,8 @@ Where, for instance, "appid" corresponds to the app-registration of the daemon a
 ## Create second Daemon
 
 Repeat the steps from the previous section, and give the second daemon a nice descriptive (and inventive!) name, like daemon-2. **Remember to save the secret**
+
+You can skip the call to the token endpoint for daemon-2 for now, if you want. 
 
 ## Granting Application Permissions to the deamons
 You need to add application permissions to the API app-registration. This is required to enable OAuth 2.0 client credentials flow.
@@ -165,7 +169,7 @@ The only thing you need to change is the GUID (id) value, and it needs to be a v
 
 When you are done, click save.
 
-Now, go to the app-registration of your daemon and select "API Permissions" in the left hand toolbar.
+Now, go to the app-registration of your respective daemons and select "API Permissions" in the left hand toolbar.
 
 Click on Add a Permission, find your API and select it.
 
@@ -181,12 +185,11 @@ Select the role you added previously, e.g. "Request" and click on "Add permissio
 
 Finally, when prompted, click on Click on Grant admin consent for \<your user name\>. This step requires Azure AD admin privileges. If you don't have it this will not work.
 
-Repeat the API-permission steps for the second app-registration (daemon-2) as well.
 
 ## Validate the Application Permissions in APIM
 In the previous section we granted role-based access for the client application to call the API. Now we can use a policy in APIM to validate the roles claim.
 
-Go to the the API we imported before (conference API), and click on "all operations". Then select "Edit policy" by clicking on the tiny **\<\/\>** "logo" to the far right. 
+Go to the the API we imported before (conference API), and click on "all operations". Then select "Edit policy" by clicking on the tiny **\<\/\>** "logo" to the far right.
 
 Replace the entire inbound clause with the policy below, after changing the following values:
 
@@ -204,6 +207,7 @@ Replace the entire inbound clause with the policy below, after changing the foll
                 </claim>
                 <claim name="appid" match="any">
                     <value>8ecc3af1-6ede-41d8-ab27-12338b2d5123</value>
+                    <value>8ecc3af1-6ede-41d8-ab27-12338b2d5124</value>
                 </claim>
                 <claim name="roles" match="any">
                     <value>API.Request</value>
@@ -216,12 +220,12 @@ Replace the entire inbound clause with the policy below, after changing the foll
 What this policy will do, is to 
 
 * Evaluate that the "Audience" is correct. In other words, we make sure that the token targets our API.
-* Evaluate that the appid is correct. In other words, we make sure that the user is allowed to use the API
+* Evaluate that the appids are correct. In other words, we make sure that the user is allowed to use the API
 * Evaluate that the role "API.Request" had the correct RBAC permissions to use the API.
 
 ## Try it out
 
-You have already used postman (or similar, like Insomnia) to get the Access Token
+You have already used postman (or similar, like Insomnia) to get the Access Token for e.g. Daemon-1
 
 <p align="left">
   <img width="100%"  src="./media/postman.png">
@@ -234,7 +238,7 @@ The URL to use will look similar to this:
 ````
 https://\<your APIM\>.azure-api.net/conference/speakers
 ````
-In order for this all to work, you also need to add the Access token as a header in the request.
+In order for this all to work, you also need to add the Access token (for daemon-1) as a header in the request.
 
 ## Validate AD group membership
 
@@ -252,13 +256,13 @@ Then create a new group and give it a name, and click "no members selected" to a
   <img width="40%"  src="./media/new-group.png">
 </p>
 
-Add one of your Daemon app registrations to the group and click select. Then click Create.
+Add Daemon-1 app registrations to the group and click select. Then click Create.
 
-We will use the group id, to create another claim in the API policy, so save it (on make sure you know how to navigate back to it).
+We will use the group id, to create another claim in the API policy, so save it (or make sure you know how to navigate back to it).
 
 Go to your APIM instance, and navigate to APIs and then the imported "Demo Conference API". Once again, click "All operations".
 
-Edit the policy by clicking "validate-jwt" in the inbound processing box, then add the new claim by adding the following, but using the group id of the group you just created. You should place it at the same level as the other claims, between \<required-claims\> and \<\/required-claims\>
+Edit the policy by clicking "validate-jwt" in the inbound processing box, then add the new claim by adding the claim below, but using the group id of the group you just created. You should place it at the same level as the other claims, between \<required-claims\> and \<\/required-claims\>
 
 ````
 <claim name="groups" match="any">
