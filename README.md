@@ -59,7 +59,7 @@ This section has borrowed a lot from this tutorial: https://docs.microsoft.com/e
 
 You will import an OpenAPI (formerly Swagger) Specification backend API in JSON format into APIM. The backend API is hosted at https://conferenceapi.azurewebsites.net?format=json.
 
-Start by going to you APIM instance. In the left navigation of your API Management instance, select APIs from the API Management section.
+Go to your APIM instance. In the left navigation of your API Management instance, select APIs from the API Management section.
 
 Select the OpenAPI tile, and then select "Full" on the top left of the pop up screen (instead of basic, which is the default start screen).
 
@@ -252,7 +252,7 @@ To enable more centralized control over access to backend APIs, AD groups can be
 From the left hand navigation bar, select "Groups" 
 
 <p align="left">
-  <img width="30%"  src="./media/ad-groups.png">
+  <img width="20%"  src="./media/ad-groups.png">
 </p>
 
 Then create a new group and give it a name, and click "no members selected" to add new members to the group
