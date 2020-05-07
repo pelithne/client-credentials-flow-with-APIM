@@ -1,4 +1,5 @@
 # Client Credentials flow with APIM
+
 This step-by-step guide describes how to setup a daemon app that sends requests via APIM to a REST API backend. 
 
 Authentication of the Daemons is controlled by Oauth Client Credentials flow, using Azure Active Directory and policies in Azure API Management.
@@ -42,7 +43,7 @@ Make sure that the APIM is located in the right subscription and in the resource
 
 Add an "Organization name" of your choice and an "Administrator email".
 
-**Make sure** to use the "Developer" pricing tier. The developer tier gives you full functionality but without a Service Level Agreement, and is much cheaper than the other alternatives.
+**Make sure** to use either the "Consumption" or "Developer" or pricing tier. The developer tier gives you full functionality but without a Service Level Agreement, and is much cheaper than the other alternatives. The consumption tier has some feature restrictions, but is only charged per transaction (first 1 000 000 transactions are free). Also it starts much quicker than the other tiers. 
 
 <p align="left">
   <img width="50%"  src="./media/create-apim.png">
@@ -271,6 +272,18 @@ Edit the policy by clicking "validate-jwt" in the inbound processing box, then a
     <value><Group ID></value>
 </claim>
 ````
+
+Finally, you need to edit the manifest of the API app registration again, to change this:
+
+````
+"groupMembershipClaims": null,
+````
+
+To this:
+````
+"groupMembershipClaims": "All",
+````
+
 
 Now try to access the API with the Daemon which you included in the group. The result should be as before.
 
