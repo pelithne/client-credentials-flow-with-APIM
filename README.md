@@ -100,7 +100,7 @@ Both the API and the Client needs to be registered in Azure AD, so that we can u
 Search for "App registrations" and select App Registrations from the search results. Name the registration appropriately and leave the defaults and click "Register".
 
 <p align="left">
-  <img width="50%"  src="./media/api-app-registration.png">
+  <img width="70%"  src="./media/api-app-registration.png">
 </p>
 
 In the left hand navigation pane, go to "Expose an API", then click on "Application ID URI - Set", and leave the default value, which should look similar to ````api://7f038808-5322-4125-8143-12d804a45c1b````. The alphanumeric string is the clientID. **Make a note of this** as it will be needed later.
