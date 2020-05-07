@@ -12,6 +12,8 @@ The "architecture" for this tutorial case is something like the following
 
 Depending on the identity (or AD group) of the Daemon, the APIM will allow access to different parts of the backend API.
 
+For simplicity, the Daemon is represented by REST calls from Postman (or similar) but if you want to write a real application no one is stopping you :-) 
+
 ## Create a Resource Group
 
 Start by logging in in to the Azure portal, and make sure you are in your "Home", https://portal.azure.com/#home
