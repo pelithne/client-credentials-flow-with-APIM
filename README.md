@@ -122,7 +122,7 @@ The URL to use is  https://login.microsoftonline.com/\<tenant id\>/oauth2/v2.0/t
 You also need to add a few key value pairs in the body of the request (not query parameters).
 
 * grant_type: should be ````client_credentials````
-* scope: The application ID URI from above (similar to ````api://7f038808-5322-4125-8143-12d804a45c1b````)
+* scope: The application ID URI from above plus a path (similar to ````api://7f038808-5322-4125-8143-12d804a45c1b/.default````)
 * client_secret: The secret you save securely before (right?)
 * client_id: The ClientID you saved above (similar to ````7f038808-5322-4125-8143-12d804a45c1b````)
 
