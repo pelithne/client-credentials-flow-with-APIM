@@ -1,18 +1,18 @@
 # Client Credentials flow with APIM
 
-This step-by-step guide describes how to setup a daemon app that sends requests via APIM to a REST API backend. 
+This step-by-step guide describes how to setup a Client app that sends requests via APIM to a REST API backend. 
 
-Authentication of the Daemons is controlled by Oauth Client Credentials flow, using Azure Active Directory and policies in Azure API Management.
+Authentication of the Clients is controlled by Oauth Client Credentials flow, using Azure Active Directory and policies in Azure API Management.
 
 The "architecture" for this tutorial case is something like the following
 
-* Automatic Daemon 1 -> APIM -> Backend REST API -> Operation 1, Operation 2
-* Automatic Daemon 2 -> APIM -> Backend REST API -> Operation 2
-* Automatic Daemon x -> APIM -> Backend REST API -> Operation y
+* Automatic Client 1 -> APIM -> Backend REST API -> Operation 1, Operation 2
+* Automatic Client 2 -> APIM -> Backend REST API -> Operation 2
+* Automatic Client x -> APIM -> Backend REST API -> Operation y
 
-Depending on the identity (or AD group) of the Daemon, the APIM will allow access to different parts of the backend API.
+Depending on the identity (or AD group) of the Client, the APIM will allow access to different parts of the backend API.
 
-For simplicity, the Daemon is represented by REST calls from Postman (or similar) but if you want to write a real application no one is stopping you :-) 
+For simplicity, the Client is represented by REST calls from Postman (or similar) but if you want to write a real application no one is stopping you :-) 
 
 ## Create a Resource Group
 
@@ -95,7 +95,7 @@ You will work more with the API operations later (adding policies etc).
 
 ## Create Application Registrations
 
-Both the API and the Daemon needs to be registered in Azure AD, so that we can use Oauth2 for authentication. We start with the API.
+Both the API and the Client needs to be registered in Azure AD, so that we can use Oauth2 for authentication. We start with the API.
 
 Search for "App registrations" and select App Registrations from the search results. Name the registration appropriately and leave the defaults and click "Register".
 
@@ -105,9 +105,9 @@ Search for "App registrations" and select App Registrations from the search resu
 
 In the left hand navigation pane, go to "Expose an API", then click on "Application ID URI - Set", and leave the default value, which should look similar to ````api://7f038808-5322-4125-8143-12d804a45c1b````. The alphanumeric string is the clientID. **Make a note of this** as it will be needed later.
 
-Now, create another app registration for the daemon. Give it a name, and leave the defaults then click "Register".
+Now, create another app registration for the Client. Give it a name, and leave the defaults then click "Register".
 
-Now, we need to create a secret for the daemon. In the left hand navigation pane, go to "Certificate & Secrets", then select "New Client Secret". Give it a name and choose an expiration time (I use 1 year).
+Now, we need to create a secret for the Client. In the left hand navigation pane, go to "Certificate & Secrets", then select "New Client Secret". Give it a name and choose an expiration time (I use 1 year).
 
 Copy the secret and store it safely. You will not be able to see it again in the portal.
 
@@ -138,13 +138,13 @@ If you go to (for instance) jwt.ms you can decode the token and break it down to
   <img width="60%"  src="./media/jwt-decoded.png">
 </p>
 
-Where, for instance, "appid" corresponds to the app-registration of the daemon app.
+Where, for instance, "appid" corresponds to the app-registration of the Client app.
 
-## Create second Daemon
+## Create second Client
 
-Repeat the steps from the previous section, and give the second daemon a nice descriptive (and inventive!) name, like daemon-2. **Remember to save the secret**
+Repeat the steps from the previous section, and give the second Client a nice descriptive (and inventive!) name, like Client-2. **Remember to save the secret**
 
-You can skip the call to the token endpoint for daemon-2 for now, if you want. 
+You can skip the call to the token endpoint for Client-2 for now, if you want. 
 
 ## Granting Application Permissions to the deamons
 You need to add application permissions to the API app-registration. This is required to enable OAuth 2.0 client credentials flow.
@@ -174,7 +174,7 @@ The only thing you need to change is the GUID (id) value, and it needs to be a v
 
 When you are done, click save.
 
-Now, go to the app-registration of your respective daemons and select "API Permissions" in the left hand toolbar.
+Now, go to the app-registration of your respective Clients and select "API Permissions" in the left hand toolbar.
 
 Click on Add a Permission, find your API and select it.
 
@@ -185,7 +185,7 @@ Click on Add a Permission, find your API and select it.
 Select the role you added previously, e.g. "Request" and click on "Add permissions".
 
 <p align="left">
-  <img width="100%"  src="./media/api-permissions2.png">
+  <img width="60%"  src="./media/api-permissions2.png">
 </p>
 
 Finally, when prompted, click on Click on Grant admin consent for \<your user name\>. This step requires Azure AD admin privileges. If you don't have it this will not work.
@@ -200,7 +200,7 @@ Replace the entire inbound clause with the policy below, after changing the foll
 
  * openid-config url: Replace the GUID with your Tenant ID
  * claim name="aud": Replace the value with your API app registration id
- * claim name="appid": Replace the value with your Daemon apps registration ids
+ * claim name="appid": Replace the value with your Client apps registration ids
 
 ````
     <inbound>
@@ -230,7 +230,7 @@ What this policy will do, is to
 
 ## Try it out
 
-You have already used postman (or similar, like Insomnia) to get the Access Token for e.g. Daemon-1
+You have already used postman (or similar, like Insomnia) to get the Access Token for e.g. Client-1
 
 <p align="left">
   <img width="100%"  src="./media/postman.png">
@@ -243,7 +243,7 @@ The URL to use will look similar to this:
 ````
 https://\<your APIM\>.azure-api.net/conference/speakers
 ````
-In order for this all to work, you also need to add the Access token (for daemon-1) as a header in the request.
+In order for this all to work, you also need to add the Access token (for Client-1) as a header in the request.
 
 ## Validate AD group membership
 
@@ -261,7 +261,7 @@ Then create a new group and give it a name, and click "no members selected" to a
   <img width="40%"  src="./media/new-group.png">
 </p>
 
-Add Daemon-1 app registrations to the group and click select. Then click Create.
+Add Client-1 app registrations to the group and click select. Then click Create.
 
 We will use the group id, to create another claim in the API policy, so save it (or make sure you know how to navigate back to it).
 
@@ -287,10 +287,10 @@ To this:
 ````
 
 
-Now try to access the API with the Daemon which you included in the group. The result should be as before.
+Now try to access the API with the Client which you included in the group. The result should be as before.
 
-If instead you try to access the API with the other Daemon, the request will be rejected.
+If instead you try to access the API with the other Client, the request will be rejected.
 
 ## Extra assignment!
 
-Use the tools and processes above to restrict usage on Operation level instead of API level. For example, give Daemon-1 access to GetSessions and GetSpeakers, while Daemon-2 only gets access to GetSpeakers.
+Use the tools and processes above to restrict usage on Operation level instead of API level. For example, give Client-1 access to GetSessions and GetSpeakers, while Client-2 only gets access to GetSpeakers.
