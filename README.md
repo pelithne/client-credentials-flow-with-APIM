@@ -141,18 +141,26 @@ You also need to add a few key value pairs in the body of the request (not query
 
 After pressing **Send** you should get a response similar to the (slightly redacted) output in the picture above.
 
-If you go to jwt.ms and paste in the token, you can decode the token and break it down to its parts. I should look something like below (except for the redacted parts). This is not needed, just a "good to know".
+If you go to jwt.ms and paste in the "access token", you can decode the token and break it down to its parts. I should look something like below (except for the redacted parts). This is not needed, just a "good to know".
 
 <p align="left">
   <img width="60%"  src="./media/jwt-decoded.png">
 </p>
 
-Where, for instance, "appid" corresponds to the app-registration of the Client app.
+Where, for instance, "appid" will correspond to the app-registration Client ID of the Client app.
 
 ## Granting Application Permissions to the clients
-You need to add application permissions to the API app-registration. This is required to enable OAuth 2.0 client credentials flow.
+You need to add application permissions to the API app-registration. This is required to enable OAuth 2.0 client credentials flow, so that the Client applications are allowed to use the API.
 
-Go to the API app registration you created previously, and edit its Manifest. You need to add an entry into the appRoles array specifying that the permission is for an application. For more info on this, feel free to have a look at https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-add-app-roles-in-azure-ad-apps
+Go to the API app registration you created previously, and edit its Manifest. You will find this in the left hand navigation pane of the API app registration blade
+
+<p align="left">
+  <img width="40%"  src="./media/api-manifest.png">
+</p>
+
+
+
+You need to add an entry into the appRoles array specifying that the permission is for an application. For more info on this, feel free to have a look at https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-add-app-roles-in-azure-ad-apps
 
 The appRoles array is empty to begin with and you need to add the following:
 
