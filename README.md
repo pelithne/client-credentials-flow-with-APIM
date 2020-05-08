@@ -257,10 +257,10 @@ The URL to use will look similar to this:
 https://\<your APIM\>.azure-api.net/conference/speakers
 ````
 
-YOu can (once again) use Postman to send the request. You need to used the "GET" operation, and the access token needs to be added as a header, with the name ""Authorozation". It should look similar to the picture below:
+You can (once again) use Postman to send the request. You need to used the "GET" operation, and the access token needs to be added as a header, with the name ""Authorozation". It should look similar to the picture below:
 
 <p align="left">
-  <img width="100%"  src="./media/api-request.png">
+  <img width="60%"  src="./media/api-request.png">
 </p>
 
 
