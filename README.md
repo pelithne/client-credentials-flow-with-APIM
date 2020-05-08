@@ -256,6 +256,8 @@ https://\<your APIM\>.azure-api.net/conference/speakers
 ````
 In order for this all to work, you also need to add the Access token (for Client-1) as a header in the request.
 
+You should get a positive response from the API, with (for example) the list of "Speakers".
+
 ## Validate AD group membership
 
 To enable more centralized control over access to backend APIs, AD groups can be used. In order to demonstrate this a new group will be created in your AD. Search for "AD" and select "Azure Active Directory" from the search results.
