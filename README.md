@@ -11,7 +11,7 @@ The overview architecture looks like this
 </p>
 
 
-Depending on the identity (or AD group) of the "Non-interactive Client application", the APIM will allow access to different parts of the backend API.
+Depending on the identity (or group membership) of the "Non-interactive Client application", the APIM will allow access to different parts of the backend API.
 
 For simplicity, the Client is represented by REST calls from Postman (or similar) but if you want to write a real application no one is stopping you :-) 
 
