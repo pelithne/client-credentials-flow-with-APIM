@@ -233,7 +233,9 @@ Replace the entire inbound clause with the policy below, after changing the foll
     </inbound>
 ````
 
-What this policy will do, is to 
+Then save the policy.
+
+What this policy will do, is to
 
 * Evaluate that the "Audience" is correct. In other words, we make sure that the token targets our API.
 * Evaluate that the appids are correct. In other words, we make sure that the user is allowed to use the API
@@ -254,7 +256,16 @@ The URL to use will look similar to this:
 ````
 https://\<your APIM\>.azure-api.net/conference/speakers
 ````
-In order for this all to work, you also need to add the Access token (for Client-1) as a header in the request. Then repeat the step for Client-2.
+
+YOu can (once again) use Postman to send the request. You need to used the "GET" operation, and the access token needs to be added as a header, with the name ""Authorozation". It should look similar to the picture below:
+
+<p align="left">
+  <img width="100%"  src="./media/api-request.png">
+</p>
+
+
+
+Then repeat the step for Client-2.
 
 Both clients should get positive responses from the API, with (for example) the list of "Speakers".
 
