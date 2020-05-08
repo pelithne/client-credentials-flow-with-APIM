@@ -38,7 +38,7 @@ Then click review and create. Validation should pass, after which you can click 
 
 Azure API Manager, is a platform that can hold API definitions. The APIs are not hosted in APIM, instead it points to backend APIs, which could be running on Azure, on-prem, in another cloud or anywhere else you have connectivity to.
 
-Start by going to your resource group, if you are not already there. Click on "Create Resources" (or "Add") and search for APIM in the search field. Select API Management from the search results, then click create.
+Start by going to your resource group, if you are not already there. Click on "Create Resources" (or "Add") and write "APIM" in the search field. Select "API Management" from the search results, then click create.
 
 Give your APIM a globally unique name. This is needed because the name will be used to create a URL that needs to be a Fully Qualified Domain Name, FQDN.
 
@@ -52,13 +52,13 @@ Add an "Organization name" of your choice and an "Administrator email".
   <img width="50%"  src="./media/create-apim.png">
 </p>
 
-Now wait. It can take a while to create the APIM instance, up to 40 minutes at the time of writing (May 2020)
+Now wait. It can take a while to create the APIM instance, up to 40 minutes at the time of writing (May 2020). If  you used the consumption tier, it should be up within a few minutes.
 
 ## Create an API in APIM
 
-This section has borrowed a lot from this tutorial: https://docs.microsoft.com/en-us/azure/api-management/import-and-publish#-import-and-publish-a-backend-api but a bit more condensed. If unclear, feel free to go to the source for more details.
+This section has borrowed a lot from this tutorial: https://docs.microsoft.com/en-us/azure/api-management/import-and-publish#-import-and-publish-a-backend-api but is a bit more condensed. If unclear, feel free to go to the source for more details.
 
-You will import an OpenAPI (formerly Swagger) Specification backend API in JSON format into APIM. The backend API is hosted at https://conferenceapi.azurewebsites.net?format=json.
+You will import an OpenAPI (formerly Swagger) Specification backend API in JSON format into APIM. The backend API swagger definition is located at https://conferenceapi.azurewebsites.net?format=json.
 
 Go to your APIM instance. In the left navigation of your API Management instance, select APIs from the API Management section.
 
@@ -66,7 +66,7 @@ Select the OpenAPI tile, and then select "Full" on the top left of the pop up sc
 
 Paste this URI into the "Open API Specification" field: https://conferenceapi.azurewebsites.net?format=json
 
-This will import the API into APIM, and populate the other fields in the pop-up. You need to add an API URL suffix that will be used to reach the API that is published through APIM. You can call it anything, but I will call it "conference".
+This will import the API into APIM, and populate the other fields in the pop-up. You need to add an API URL suffix that will be used to reach the API that is published through your APIM. You can call it anything, but "conference" is a suggestion.
 
 It should look like the following: 
 
