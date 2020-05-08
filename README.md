@@ -287,11 +287,11 @@ Then create a new group and give it a name, and click "no members selected" to a
 
 Add Client-1 app registrations to the group and click select. Then click Create.
 
-We will use the group id, to create another claim in the API policy, so save it (or make sure you know how to navigate back to it).
+We will use the object Id of the group, to create another claim in the API policy, so save it (or make sure you know how to navigate back to it).
 
 Go to your APIM instance, and navigate to APIs and then the imported "Demo Conference API". Once again, click "All operations".
 
-Edit the policy by clicking "validate-jwt" in the inbound processing box, then add the new claim by adding the claim below, but using the group id of the group you just created. You should place it at the same level as the other claims, between \<required-claims\> and \<\/required-claims\>
+Edit the policy by clicking "validate-jwt" in the inbound processing box, then add the new claim by adding the claim below, but using the "Object Id" of the group you just created. You should place it at the same level as the other claims, between \<required-claims\> and \<\/required-claims\>
 
 ````
 <claim name="groups" match="any">
