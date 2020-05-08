@@ -4,13 +4,14 @@ This step-by-step guide describes how to setup a Client app that sends requests 
 
 Authentication of the Clients is controlled by Oauth Client Credentials flow, using Azure Active Directory and policies in Azure API Management.
 
-The "architecture" for this tutorial case is something like the following
+The overview architecture looks like this
 
-* Automatic Client 1 -> APIM -> Backend REST API -> Operation 1, Operation 2
-* Automatic Client 2 -> APIM -> Backend REST API -> Operation 2
-* Automatic Client x -> APIM -> Backend REST API -> Operation y
+<p align="left">
+  <img width="40%"  src="./media/flow-overview.png">
+</p>
 
-Depending on the identity (or AD group) of the Client, the APIM will allow access to different parts of the backend API.
+
+Depending on the identity (or AD group) of the "Non-interactive Client application", the APIM will allow access to different parts of the backend API.
 
 For simplicity, the Client is represented by REST calls from Postman (or similar) but if you want to write a real application no one is stopping you :-) 
 
