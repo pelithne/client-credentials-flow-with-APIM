@@ -203,7 +203,7 @@ Finally, when prompted, click on Click on Grant admin consent for \<your user na
 
 
 ## Validate the Application Permissions in APIM
-In the previous section we granted role-based access for the client application to call the API. Now we can use a policy in APIM to validate the roles claim.
+In the previous section we granted the client applications rights to call the API. Now we can use a policy in APIM to validate the roles claim.
 
 Go to the the API we imported before (conference API), and click on "all operations". Then select "Edit policy" by clicking on the tiny **\<\/\>** "logo" to the far right.
 
