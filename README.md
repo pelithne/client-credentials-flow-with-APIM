@@ -7,7 +7,7 @@ Authentication of the Clients is controlled by Oauth Client Credentials flow, us
 The overview architecture looks like this
 
 <p align="left">
-  <img width="60%"  src="./media/flow-overview.png">
+  <img width="80%"  src="./media/flow-overview.png">
 </p>
 
 
