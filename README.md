@@ -45,7 +45,7 @@ Make sure that the APIM is located in the right subscription and in the resource
 
 Add an "Organization name" of your choice and an "Administrator email".
 
-**Make sure** to use either the "Consumption" or "Developer" or pricing tier. The developer tier gives you full functionality but without a Service Level Agreement, and is much cheaper than the other alternatives. The consumption tier has some feature restrictions, but is only charged per transaction (first 1 000 000 transactions are free). Also it starts much quicker than the other tiers. 
+**Make sure** to use either the "Consumption" or "Developer" or pricing tier. The developer tier gives you full functionality but without a Service Level Agreement, and is much cheaper than "Basic", "Standard" or "Premium". The consumption tier has some feature restrictions, but is only charged per transaction (plus, the first 1 000 000 transactions are free). Also it starts much quicker than the other tiers.
 
 <p align="left">
   <img width="50%"  src="./media/create-apim.png">
@@ -55,7 +55,7 @@ Now wait. It can take a while to create the APIM instance, up to 40 minutes at t
 
 ## Create an API in APIM
 
-This section has borrowed a lot from this tutorial: https://docs.microsoft.com/en-us/azure/api-management/import-and-publish#-import-and-publish-a-backend-api but I have made it a bit condensed. If unclear, feel free to go to the source for more details.
+This section has borrowed a lot from this tutorial: https://docs.microsoft.com/en-us/azure/api-management/import-and-publish#-import-and-publish-a-backend-api but a bit more condensed. If unclear, feel free to go to the source for more details.
 
 You will import an OpenAPI (formerly Swagger) Specification backend API in JSON format into APIM. The backend API is hosted at https://conferenceapi.azurewebsites.net?format=json.
 
@@ -75,7 +75,7 @@ It should look like the following:
 
 If all looks right, click "Create".
 
-The new API will be imported, and you will see that API with all its operations, next to the Echo API which comes as a default with APIM. 
+The new API will be imported, and you will see that API with all its operations (GetSession, GetSessions, GetSpeaker, etc). 
 
 <p align="left">
   <img width="100%"  src="./media/apis.png">
@@ -87,7 +87,7 @@ For simplicity, go into the settings of the API and uncheck the box named "Subsc
   <img width="40%"  src="./media/sub.png">
 </p>
 
-To try the new API out, you can send a request to ````https://\<your APIM\>.azure-api.net/conference/speakers````. This is one of the operations of the API, named GetSpeakers.
+To try the new API out, you can send a request to ````https://\<your APIM\>.azure-api.net/conference/speakers````. This will call one of the operations of the API, named GetSpeakers.
 
 You can use a browser for this, or curl or postman or whatever is your preference. The response should be a list of people, "speakers".
 
@@ -95,7 +95,9 @@ You will work more with the API operations later (adding policies etc).
 
 ## Create Application Registrations
 
-Both the API and the Client needs to be registered in Azure AD, so that we can use Oauth2 for authentication. We start with the API.
+Both the API and the Clients need to be registered in Azure AD, so that we can use Oauth2 for authentication. During this process you will end up with a few IDs and secrets, which you need to keep track of. I suggest creating a text file to store these (but remember to never store secrets in plain text for anything even resembling production!).
+
+### API Application Registration
 
 Search for "App registrations" and select App Registrations from the search results. Name the registration appropriately and leave the defaults and click "Register".
 
@@ -103,36 +105,43 @@ Search for "App registrations" and select App Registrations from the search resu
   <img width="70%"  src="./media/api-app-registration.png">
 </p>
 
-In the left hand navigation pane, go to "Expose an API", then click on "Application ID URI - Set", and leave the default value, which should look similar to ````api://7f038808-5322-4125-8143-12d804a45c1b````. The alphanumeric string is the clientID. **Make a note of this** as it will be needed later.
+In the left hand navigation pane, go to "Expose an API", then click on "Application ID URI - Set", and leave the default value, which should look similar to ````api://7f038808-5322-4125-8143-12d804a45c1b````. The alphanumeric string is the clientID. Make a note of this as it will be needed later (you can of course navigate back to this place and retrieve this value).
 
-Now, create another app registration for the Client. Give it a name, and leave the defaults then click "Register".
+### Client-1 Application Registration
 
-Now, we need to create a secret for the Client. In the left hand navigation pane, go to "Certificate & Secrets", then select "New Client Secret". Give it a name and choose an expiration time (I use 1 year).
+Create another app registration for the first Client. Give it a name (why not "Client-1"), and leave the defaults then click "Register".
 
-Copy the secret and store it safely. You will not be able to see it again in the portal.
+Next,  create a secret for the Client. In the left hand navigation pane, go to "Certificate & Secrets", then select "New Client Secret". Give it a name and choose an expiration time (for instance, 1 year).
+
+**Copy the secret and store it safely**. You will not be able to see it again in the portal.
 
 Also, make a note of the clientID, which can be found in the "Overview" from the left hand navigation pane.
 
+### Client-2 Application Registration
+
+Repeat the steps for Client-1, and give it a different name ("Client-2"!)
+
+
 ## Get the Access Token
 
-Use e.g. postman to try if you get a response from your token endpoint. 
+Use e.g. Postman to try if you get a response from your token endpoint. Lets use Client-1 to begin with.
 
 The URL to use is  https://login.microsoftonline.com/\<tenant id\>/oauth2/v2.0/token, and the method needs to be POST. 
 
-You also need to add a few key value pairs in the body of the request (not query parameters).
+You also need to add a few key value pairs in the body of the request (not query parameters). Have a look at the screen dump below to see how to input this into Postman.
 
 * grant_type: should be ````client_credentials````
-* scope: The application ID URI from above plus a path (similar to ````api://7f038808-5322-4125-8143-12d804a45c1b/.default````)
-* client_secret: The secret you save securely before (right?)
-* client_id: The ClientID from your app registration that you saved above (similar to ````8ecc3af1-6ede-41d8-ab27-12338b2d5123````)
+* scope: The application ID URI for the API plus a path (similar to ````api://7f038808-5322-4125-8143-12d804a45c1b/.default````)
+* client_secret: The secret for Client-1 that you save securely before (right?)
+* client_id: The ClientID for Client-1 that you saved above (similar to ````8ecc3af1-6ede-41d8-ab27-12338b2d5123````)
 
 <p align="left">
   <img width="100%"  src="./media/postman.png">
 </p>
 
-You should get a response similar to the (slightly redacted) output in the picture above.
+After pressing **Send** you should get a response similar to the (slightly redacted) output in the picture above.
 
-If you go to (for instance) jwt.ms you can decode the token and break it down to its parts. I should look something like this (except for the redacted parts):
+If you go to jwt.ms and paste in the token, you can decode the token and break it down to its parts. I should look something like below (except for the redacted parts). This is not needed, just a "good to know".
 
 <p align="left">
   <img width="60%"  src="./media/jwt-decoded.png">
@@ -140,13 +149,7 @@ If you go to (for instance) jwt.ms you can decode the token and break it down to
 
 Where, for instance, "appid" corresponds to the app-registration of the Client app.
 
-## Create second Client
-
-Repeat the steps from the previous section, and give the second Client a nice descriptive (and inventive!) name, like Client-2. **Remember to save the secret**
-
-You can skip the call to the token endpoint for Client-2 for now, if you want. 
-
-## Granting Application Permissions to the deamons
+## Granting Application Permissions to the clients
 You need to add application permissions to the API app-registration. This is required to enable OAuth 2.0 client credentials flow.
 
 Go to the API app registration you created previously, and edit its Manifest. You need to add an entry into the appRoles array specifying that the permission is for an application. For more info on this, feel free to have a look at https://docs.microsoft.com/en-us/azure/active-directory/develop/howto-add-app-roles-in-azure-ad-apps
