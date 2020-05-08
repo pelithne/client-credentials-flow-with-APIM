@@ -254,9 +254,9 @@ The URL to use will look similar to this:
 ````
 https://\<your APIM\>.azure-api.net/conference/speakers
 ````
-In order for this all to work, you also need to add the Access token (for Client-1) as a header in the request.
+In order for this all to work, you also need to add the Access token (for Client-1) as a header in the request. Then repeat the step for Client-2.
 
-You should get a positive response from the API, with (for example) the list of "Speakers".
+Both clients should get positive responses from the API, with (for example) the list of "Speakers".
 
 ## Validate AD group membership
 
